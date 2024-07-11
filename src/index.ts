@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { createPdf } from "./pdfGenerator";
-import { createWord } from "./wordGenerator"; 
+import { createWord } from "./wordGenerator";
 import path from "path";
 import cors from "cors";
 
@@ -8,12 +8,16 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.send("[+] Server up and running...");
+});
 
 app.post("/generate-pdf", async (req: Request, res: Response) => {
   try {
     const { username, text, title } = req.body;
-    
+
     if (!username) {
       return res.status(400).json({
         success: false,
@@ -21,8 +25,8 @@ app.post("/generate-pdf", async (req: Request, res: Response) => {
       });
     }
 
-    const pdfName = await createPdf(title, text, username) as string;
-    const wordName = await createWord(title, text, username) as string;
+    const pdfName = (await createPdf(title, text, username)) as string;
+    const wordName = (await createWord(title, text, username)) as string;
     return res.json({
       success: true,
       pdfName,
@@ -60,7 +64,6 @@ app.get("/download-word/:filename", (req: Request, res: Response) => {
   });
 });
 
-
 app.listen(port, () => {
   console.log(`[+] Listening on port number: ${port}`);
-})
+});

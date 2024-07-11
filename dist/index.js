@@ -21,6 +21,9 @@ const app = (0, express_1.default)();
 const port = process.env.PORT || 5000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
+app.get("/", (req, res) => {
+    res.send("[+] Server up and running...");
+});
 app.post("/generate-pdf", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, text, title } = req.body;
@@ -30,8 +33,8 @@ app.post("/generate-pdf", (req, res) => __awaiter(void 0, void 0, void 0, functi
                 message: "Username is required",
             });
         }
-        const pdfName = yield (0, pdfGenerator_1.createPdf)(title, text, username);
-        const wordName = yield (0, wordGenerator_1.createWord)(title, text, username);
+        const pdfName = (yield (0, pdfGenerator_1.createPdf)(title, text, username));
+        const wordName = (yield (0, wordGenerator_1.createWord)(title, text, username));
         return res.json({
             success: true,
             pdfName,
